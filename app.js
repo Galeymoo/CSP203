@@ -7,13 +7,13 @@ const authRoutes = require('./routes/authRoutes');
 const indexRoutes = require('./routes/index');
 const path = require('path');
 const dotenv = require('dotenv');
-// Initialize Express app
-const app = express();
-const PORT = process.env.PORT || 3001;
 
 // Load environment variables
 dotenv.config();
 
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Set view engine to EJS
 app.set('view engine', 'ejs');
@@ -49,5 +49,5 @@ app.get('/db-test', async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(Server is running on http://localhost:${PORT});
 });
