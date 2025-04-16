@@ -1,25 +1,28 @@
 // Import required modules
 const express = require('express');
 const path = require('path');
-const dotenv  =  require('dotenv')
+const dotenv = require('dotenv');
 const session = require('express-session');
 const db = require('./config/db');
 const bodyParser = require('body-parser');
+const adminRoutes = require('./routes/adminRoutes');
+
+// Route files
 const indexRoutes = require('./routes/index');
 const authRoutes = require('./routes/authRoutes');
 const homeRoutes = require('./routes/homeRoutes');
 const profileRoutes = require('./routes/profileRoutes');
-const bookRoutes = require("./routes/bookRoutes");
+const bookRoutes = require('./routes/bookRoutes');
 
-//load environment variables
+
+// Load environment variables
 dotenv.config();
-
 
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
+// Middleware
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -28,31 +31,27 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         secure: false,
-        maxAge: 60 * 60 * 1000 //session expries after 1 hour
+        maxAge: 60 * 60 * 1000 // Session expires after 1 hour
     }
 }));
-
 
 // Set view engine to EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/components', express.static(path.join(__dirname, 'views/components')));
 
-
-
-
-// routes
+// Route handling
 app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 app.use('/', homeRoutes);
 app.use('/', profileRoutes);
-app.use("/", bookRoutes);
+app.use('/', bookRoutes);
+app.use('/', adminRoutes);
 
-//for db connection
+// Test database connection
 app.get('/db-test', async (req, res) => {
     try {
         const result = await db.one('SELECT NOW() AS current_time');
@@ -62,8 +61,7 @@ app.get('/db-test', async (req, res) => {
     }
 });
 
-
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
